@@ -76,7 +76,7 @@ def evaluate(pred, input_text, output_text, eval_aspect):
      {"role": "user", "content": prompt}],
     temperature=0.5,#temperature to use for sampling. 0 means the output is deterministic. Values greater than 1 encourage more diversity
     top_p=0.9,#0 < top_p ≤ 1 Sample from the set of tokens with highest probability such that sum of probabilies is higher than p. Lower values focus on the most probable tokens.Higher values sample more low-probability tokens
-    max_tokens=100
+    max_tokens=1024
     )
 
     for i in range(5):
