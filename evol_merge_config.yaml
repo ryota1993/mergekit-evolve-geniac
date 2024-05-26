@@ -1,9 +1,10 @@
 genome:
     models:
-      - tokyotech-llm/Swallow-MS-7b-v0.1
-      - Nexusflow/Starling-LM-7B-beta
+      - kawagoshi-llm-team/llma3_manydata_our_data_rope
+      - kawagoshi-llm-team/llma3_manydata_not_our_data_rope
+      - kawagoshi-llm-team/llama3_sft_many_chat
     merge_method: dare_ties
-    base_model: tokyotech-llm/Swallow-MS-7b-v0.1
+    base_model: kawagoshi-llm-team/llma3_manydata_our_data_rope
     tokenizer_source: base
     layer_granularity: 4 # sane default
     allow_negative_weights: true # useful with task_arithmetic
