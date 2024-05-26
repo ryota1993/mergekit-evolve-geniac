@@ -6,7 +6,7 @@ genome:
     merge_method: dare_ties
     base_model: kawagoshi-llm-team/llma3_manydata_our_data_rope
     tokenizer_source: base
-    layer_granularity: 4 # sane default
+    layer_granularity: 8 # sane default
     allow_negative_weights: true # useful with task_arithmetic
 tasks:
   - name: elyzatasks100
