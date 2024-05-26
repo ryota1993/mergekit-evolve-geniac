@@ -76,15 +76,20 @@ def evaluate(pred, input_text, output_text, eval_aspect):
      {"role": "user", "content": prompt}],
     temperature=0.5,#temperature to use for sampling. 0 means the output is deterministic. Values greater than 1 encourage more diversity
     top_p=0.9,#0 < top_p ≤ 1 Sample from the set of tokens with highest probability such that sum of probabilies is higher than p. Lower values focus on the most probable tokens.Higher values sample more low-probability tokens
-    max_tokens=512
+    max_tokens=100
     )
 
-    response = chat_completion.choices[0].message.content
-    #response = gemini_model.generate_content(prompt)
-    num = int(response.text)
-    if 1 <= num <= 5:
-        return num
-    raise Exception("Response Error")
+    for i in range(5):
+        try:
+            response = chat_completion.choices[0].message.content
+            #response = gemini_model.generate_content(prompt)
+            num = int(response.text)
+            if 1 <= num <= 5:
+                return num
+        except:
+            print("error", response)
+    ### 5回のRetryに失敗した場合、1を返す
+    return 1
 
 # スコアの計算
 def process_results(doc, results):
