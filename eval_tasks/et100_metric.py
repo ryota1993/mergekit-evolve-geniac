@@ -37,7 +37,7 @@ openai = OpenAI(
 )
 
 # プロンプトテンプレートの準備
-prompt_filename = "/content/mergekit-evolve-elyzatask100/eval_tasks/prompt_eval_llamacpp.txt"
+prompt_filename = "/content/mixtral-evolve/eval_tasks/prompt_eval_llamacpp.txt"
 with open(prompt_filename, encoding='utf-8') as f:
     template_prompt = f.read()
  
