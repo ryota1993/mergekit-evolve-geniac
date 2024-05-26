@@ -94,7 +94,7 @@ def evaluate(pred, input_text, output_text, eval_aspect):
     # 評価
     chat_completion = openai.chat.completions.create(
     model="mistralai/Mixtral-8x22B-Instruct-v0.1",
-    messages=[{"role": "system", "content": "あなたは数字のみを回答するAI採点ボットです。"},
+    messages=[{"role": "system", "content": "あなたは数字のみで回答するAI採点ボットです。"},
      {"role": "user", "content": prompt}],
     temperature=0.5,#temperature to use for sampling. 0 means the output is deterministic. Values greater than 1 encourage more diversity
     top_p=0.9,#0 < top_p ≤ 1 Sample from the set of tokens with highest probability such that sum of probabilies is higher than p. Lower values focus on the most probable tokens.Higher values sample more low-probability tokens
