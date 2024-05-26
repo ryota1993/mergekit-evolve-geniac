@@ -40,6 +40,28 @@ openai = OpenAI(
 prompt_filename = "/content/mixtral-evolve/eval_tasks/prompt_eval_llamacpp.txt"
 with open(prompt_filename, encoding='utf-8') as f:
     template_prompt = f.read()
+
+import re
+
+def extract_number_from_response(response):
+    # Define a function to normalize full-width to half-width characters
+    def normalize_full_width(s):
+        return s.translate(str.maketrans(
+            '０１２３４５６７８９',  # Full-width characters
+            '0123456789'  # Half-width characters
+        ))
+    
+    # Extract the number using a regular expression
+    match = re.search(r'\d+', response)
+    if match:
+        num_str = match.group()
+        # Normalize the number string to half-width characters
+        num_str = normalize_full_width(num_str)
+        # Convert the string to an integer
+        num = int(num_str)
+        return num
+    else:
+        return None
  
 #ChatNTQ用のプロンプト
 def build_prompt(user_query):
@@ -72,7 +94,7 @@ def evaluate(pred, input_text, output_text, eval_aspect):
     # 評価
     chat_completion = openai.chat.completions.create(
     model="mistralai/Mixtral-8x22B-Instruct-v0.1",
-    messages=[{"role": "system", "content": "あなたは日本語で回答するAIボットです。"},
+    messages=[{"role": "system", "content": "あなたは数字のみを回答するAI採点ボットです。"},
      {"role": "user", "content": prompt}],
     temperature=0.5,#temperature to use for sampling. 0 means the output is deterministic. Values greater than 1 encourage more diversity
     top_p=0.9,#0 < top_p ≤ 1 Sample from the set of tokens with highest probability such that sum of probabilies is higher than p. Lower values focus on the most probable tokens.Higher values sample more low-probability tokens
@@ -82,12 +104,14 @@ def evaluate(pred, input_text, output_text, eval_aspect):
     for i in range(5):
         try:
             response = chat_completion.choices[0].message.content
+            print("response: ", response)
             #response = gemini_model.generate_content(prompt)
-            num = int(response.text)
-            if 1 <= num <= 5:
+            num = extract_number_from_response(response)
+            if num is not None and 1 <= num <= 5:
+                print("success: ", num)
                 return num
-        except:
-            print("error", response)
+        except Exception as e:
+            print("error", response, e)
     ### 5回のRetryに失敗した場合、1を返す
     return 1
 
