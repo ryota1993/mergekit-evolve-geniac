@@ -6,6 +6,7 @@ dataset_kwargs:
 output_type: generate_until
 training_split: null
 test_split: test
+doc_to_text: !function math50_metric.generate_prompt
 doc_to_target: ""
 #process_results スコア計算
 process_results: !function math50_metric.process_results

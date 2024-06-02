@@ -46,6 +46,24 @@ def extract_number_from_response(response):
         return num
     else:
         return None
+
+#ChatNTQ用のプロンプト
+def build_prompt(user_query):
+    sys_msg = "ああなたは誠実で優秀な日本人のアシスタントです。"
+    template = """[INST] <<SYS>>
+{}
+<</SYS>>
+ 
+{}[/INST]"""
+    return template.format(sys_msg,user_query)
+ 
+# プロンプトの生成
+def generate_prompt(doc):
+    user_inputs = {
+        "user_query": doc["question"],
+    }
+    prompt = build_prompt(**user_inputs)
+    return prompt
  
 # 評価
 def evaluate(pred, question, answer):

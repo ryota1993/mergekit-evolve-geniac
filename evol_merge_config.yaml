@@ -2,9 +2,10 @@ genome:
     models:
       - meta-math/MetaMath-Llemma-7B
       - meta-math/MetaMath-7B-V1.0
+      - elyza/ELYZA-japanese-Llama-2-7b-instruct
     merge_method: dare_ties
-    base_model: elyza/ELYZA-japanese-Llama-2-7b-instruct
-    tokenizer_source: base
+    #base_model: elyza/ELYZA-japanese-Llama-2-7b-instruct
+    #tokenizer_source: null
     layer_granularity: 8 # sane default
     allow_negative_weights: true # useful with task_arithmetic
 tasks:
