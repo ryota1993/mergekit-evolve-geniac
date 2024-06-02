@@ -10,20 +10,6 @@ import os
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 
-model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
-
-tokenizer = AutoTokenizer.from_pretrained(model_id)
-messages = [
-    {"role": "system", "content": "You are a pirate chatbot who always responds in pirate speak!"},
-    {"role": "user", "content": "Who are you?"},
-]
-
-input_ids = tokenizer.apply_chat_template(
-    messages,
-    add_generation_prompt=True,
-    return_tensors="pt"
-).to(model.device)
-
 # APIキーの準備
 DEEPINFRA_API_KEY = os.environ.get("DEEPINFRA_API_KEY")
 
@@ -67,8 +53,8 @@ def extract_number_from_response(response):
 def build_prompt(user_query):
     sys_msg = "あなたは日本語で回答するChatbotです。"
     template = """
-    <|start_header_id|>system<|end_header_id|>\n\n{sys_msg}<|eot_id|>
-    <|start_header_id|>user<|end_header_id|>{user_query}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+    <|start_header_id|>system<|end_header_id|>\n\n{}<|eot_id|>
+    <|start_header_id|>user<|end_header_id|>{}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
     """
     return template.format(sys_msg,user_query)
  
