@@ -1,13 +1,13 @@
 genome:
     models:
-      - meta-math/MetaMath-Llemma-7B
-      - meta-math/MetaMath-7B-V1.0
-      - elyza/ELYZA-japanese-Llama-2-7b-instruct
+      - lightblue/suzume-llama-3-8B-japanese
+      - rinna/llama-3-youko-8b
     merge_method: dare_ties
-    #base_model: elyza/ELYZA-japanese-Llama-2-7b-instruct
-    #tokenizer_source: null
+    base_model: meta-llama/Meta-Llama-3-8B-Instruct
+    tokenizer_source: null
     layer_granularity: 8 # sane default
     allow_negative_weights: true # useful with task_arithmetic
+    smooth: true
 tasks:
-  - name: math50 #- name: elyzatasks100
+  - name: elyzatasks100 #- name: elyzatasks100
     weight: 1.0 #weight: 0.0

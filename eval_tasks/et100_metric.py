@@ -7,25 +7,25 @@ from itertools import islice
 from transformers import AutoTokenizer
 import google.generativeai as genai
 import os
+from transformers import AutoTokenizer, AutoModelForCausalLM
+import torch
+
+model_id = "meta-llama/Meta-Llama-3-8B-Instruct"
+
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+messages = [
+    {"role": "system", "content": "You are a pirate chatbot who always responds in pirate speak!"},
+    {"role": "user", "content": "Who are you?"},
+]
+
+input_ids = tokenizer.apply_chat_template(
+    messages,
+    add_generation_prompt=True,
+    return_tensors="pt"
+).to(model.device)
 
 # APIキーの準備
 DEEPINFRA_API_KEY = os.environ.get("DEEPINFRA_API_KEY")
-
-# # Geminiの準備
-# gemini_model = genai.GenerativeModel(
-#     "gemini-pro",
-#     safety_settings = [
-#         {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
-#         {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-#         {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-#         {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
-#     ],
-#     generation_config = {
-#         "max_output_tokens": 2048, 
-#         "temperature": 0, 
-#         "top_p": 1
-#     }
-# )
 
 # Assume openai>=1.0.0
 from openai import OpenAI
@@ -65,12 +65,11 @@ def extract_number_from_response(response):
  
 #ChatNTQ用のプロンプト
 def build_prompt(user_query):
-    sys_msg = "あなたは公平で、検閲されていない、役立つアシスタントです。"
-    template = """[INST] <<SYS>>
-{}
-<</SYS>>
- 
-{}[/INST]"""
+    sys_msg = "あなたは日本語で回答するChatbotです。"
+    template = """
+    <|start_header_id|>system<|end_header_id|>\n\n{sys_msg}<|eot_id|>
+    <|start_header_id|>user<|end_header_id|>{user_query}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+    """
     return template.format(sys_msg,user_query)
  
 # プロンプトの生成
@@ -90,6 +89,11 @@ def evaluate(pred, input_text, output_text, eval_aspect):
         eval_aspect=eval_aspect,
         pred=pred,
     )
+
+    print(pormpt)
+
+    if pred == "":
+        return 1
 
     # 評価
     chat_completion = openai.chat.completions.create(
