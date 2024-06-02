@@ -49,7 +49,7 @@ def extract_number_from_response(response):
 
 #ChatNTQ用のプロンプト
 def build_prompt(user_query):
-    sys_msg = "ああなたは誠実で優秀な日本人のアシスタントです。"
+    sys_msg = "あなたは誠実で優秀な日本人のアシスタントです。"
     template = """<s>[INST] <<SYS>>\n
 {}
 \n<</SYS>>\n\n
@@ -76,6 +76,9 @@ def evaluate(pred, question, answer):
 
     print(prompt)
 
+    if pred == "":
+        return 1
+        
     # 評価
     chat_completion = openai.chat.completions.create(
     model="mistralai/Mixtral-8x22B-Instruct-v0.1",
