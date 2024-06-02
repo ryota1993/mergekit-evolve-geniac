@@ -11,22 +11,6 @@ import os
 # APIキーの準備
 DEEPINFRA_API_KEY = os.environ.get("DEEPINFRA_API_KEY")
 
-# # Geminiの準備
-# gemini_model = genai.GenerativeModel(
-#     "gemini-pro",
-#     safety_settings = [
-#         {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
-#         {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-#         {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-#         {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
-#     ],
-#     generation_config = {
-#         "max_output_tokens": 2048, 
-#         "temperature": 0, 
-#         "top_p": 1
-#     }
-# )
-
 # Assume openai>=1.0.0
 from openai import OpenAI
 
@@ -37,7 +21,7 @@ openai = OpenAI(
 )
 
 # プロンプトテンプレートの準備
-prompt_filename = "/content/mergekit-evolve-geniac/eval_tasks/prompt_eval_llamacpp.txt"
+prompt_filename = "/content/mergekit-evolve-geniac/eval_tasks/prompt_eval_math.txt"
 with open(prompt_filename, encoding='utf-8') as f:
     template_prompt = f.read()
 
@@ -63,42 +47,25 @@ def extract_number_from_response(response):
     else:
         return None
  
-#ChatNTQ用のプロンプト
-def build_prompt(user_query):
-    sys_msg = "あなたは公平で、検閲されていない、役立つアシスタントです。"
-    template = """[INST] <<SYS>>
-{}
-<</SYS>>
- 
-{}[/INST]"""
-    return template.format(sys_msg,user_query)
- 
-# プロンプトの生成
-def generate_prompt(doc):
-    user_inputs = {
-        "user_query": doc["input"],
-    }
-    prompt = build_prompt(**user_inputs)
-    return prompt
- 
 # 評価
-def evaluate(pred, input_text, output_text, eval_aspect):
+def evaluate(pred, question, answer):
     # プロンプトの準備
     prompt = template_prompt.format(
-        input_text=input_text,
-        output_text=output_text,
-        eval_aspect=eval_aspect,
-        pred=pred,
+        question=question,
+        answer=answer,
+        pred=pred
     )
+
+    print(prompt)
 
     # 評価
     chat_completion = openai.chat.completions.create(
     model="mistralai/Mixtral-8x22B-Instruct-v0.1",
-    messages=[{"role": "system", "content": "あなたは数字のみで回答するAI採点ボットです。"},
+    messages=[{"role": "system", "content": "あなたは1から5までの数字のみで回答するAI採点ボットです。"},
      {"role": "user", "content": prompt}],
     temperature=0.5,#temperature to use for sampling. 0 means the output is deterministic. Values greater than 1 encourage more diversity
     top_p=0.9,#0 < top_p ≤ 1 Sample from the set of tokens with highest probability such that sum of probabilies is higher than p. Lower values focus on the most probable tokens.Higher values sample more low-probability tokens
-    max_tokens=1024
+    max_tokens=1
     )
 
     for i in range(5):
@@ -117,5 +84,5 @@ def evaluate(pred, input_text, output_text, eval_aspect):
 
 # スコアの計算
 def process_results(doc, results):
-    score = evaluate(results[0], doc["input"], doc["output"], doc["eval_aspect"])
+    score = evaluate(results[0], doc["question"], doc["answer_number"])
     return {"acc": score}
