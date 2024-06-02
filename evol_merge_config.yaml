@@ -1,10 +1,9 @@
 genome:
     models:
-      - kawagoshi-llm-team/llma3_manydata_our_data_rope
-      - kawagoshi-llm-team/llma3_manydata_not_our_data_rope
-      - kawagoshi-llm-team/llama3_sft_many_chat
+      - meta-math/MetaMath-Llemma-7B
+      - meta-math/MetaMath-7B-V1.0
     merge_method: dare_ties
-    base_model: kawagoshi-llm-team/llma3_manydata_our_data_rope
+    base_model: elyza/ELYZA-japanese-Llama-2-7b-instruct
     tokenizer_source: base
     layer_granularity: 8 # sane default
     allow_negative_weights: true # useful with task_arithmetic
