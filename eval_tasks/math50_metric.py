@@ -50,11 +50,11 @@ def extract_number_from_response(response):
 #ChatNTQ用のプロンプト
 def build_prompt(user_query):
     sys_msg = "ああなたは誠実で優秀な日本人のアシスタントです。"
-    template = """[INST] <<SYS>>
+    template = """<s>[INST] <<SYS>>\n
 {}
-<</SYS>>
- 
-{}[/INST]"""
+\n<</SYS>>\n\n
+{}
+[/INST]"""
     return template.format(sys_msg,user_query)
  
 # プロンプトの生成
@@ -83,7 +83,7 @@ def evaluate(pred, question, answer):
      {"role": "user", "content": prompt}],
     temperature=0.5,#temperature to use for sampling. 0 means the output is deterministic. Values greater than 1 encourage more diversity
     top_p=0.9,#0 < top_p ≤ 1 Sample from the set of tokens with highest probability such that sum of probabilies is higher than p. Lower values focus on the most probable tokens.Higher values sample more low-probability tokens
-    max_tokens=1
+    max_tokens=1024
     )
 
     for i in range(5):
