@@ -15,3 +15,9 @@ metric_list:
   - metric: acc
     aggregation: mean
     higher_is_better: true
+generation_kwargs:
+  do_sample: true
+  temperature: 0.5
+  max_gen_toks: 512
+  repetition_penalty: 1.3
+

@@ -1,6 +1,5 @@
 genome:
     models:
-      - lightblue/suzume-llama-3-8B-japanese
       - rinna/llama-3-youko-8b
     merge_method: dare_ties
     base_model: meta-llama/Meta-Llama-3-8B-Instruct
