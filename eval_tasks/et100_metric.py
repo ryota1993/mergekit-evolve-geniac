@@ -76,7 +76,7 @@ def evaluate(pred, input_text, output_text, eval_aspect):
         pred=pred,
     )
 
-    print(pormpt)
+    print(prompt)
 
     if pred == "":
         return 1
