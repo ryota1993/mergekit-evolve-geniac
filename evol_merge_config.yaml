@@ -8,6 +8,10 @@ genome:
     layer_granularity: 8 # sane default
     allow_negative_weights: true # useful with task_arithmetic
     smooth: true
+    filters:
+      - self_attn
+      - mlp
+    
 tasks:
   - name: elyzatasks100 #- name: elyzatasks100
     weight: 1.0 #weight: 0.0
